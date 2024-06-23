@@ -58,3 +58,25 @@ resource "azurerm_firewall" "fw" {
     public_ip_address_id = azurerm_public_ip.fw_pip.id
   }
 }
+
+resource "azurerm_log_analytics_workspace" "fw_law" {
+  name                = "HUB-FW-LAW"
+  resource_group_name = azurerm_firewall.fw.resource_group_name
+  location            = azurerm_firewall.fw.location
+}
+
+resource "azurerm_monitor_diagnostic_setting" "fw_diag" {
+  name                           = "HUB-FW-DIAG-LOGS"
+  target_resource_id             = azurerm_firewall.fw.id
+  log_analytics_workspace_id     = azurerm_log_analytics_workspace.fw_law.id
+  log_analytics_destination_type = "AzureDiagnostics"
+
+  metric {
+    category = "AllMetrics"
+    enabled  = true
+  }
+
+  enabled_log {
+    category_group = "AllLogs"
+  }
+}
