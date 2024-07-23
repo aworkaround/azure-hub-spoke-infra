@@ -6,7 +6,7 @@ resource "azurerm_subnet" "fw_snet" {
 }
 
 resource "azurerm_public_ip" "fw_pip" {
-  name                = "HUB-FW-PIP"
+  name                = "hub-fw-pip"
   location            = var.environments.hub.location
   resource_group_name = module.virtual_machines["hub"].resource_group_name
   allocation_method   = "Static"
@@ -22,7 +22,7 @@ locals {
 resource "azurerm_firewall_network_rule_collection" "name" {
   azure_firewall_name = azurerm_firewall.fw.name
   action              = "Allow"
-  name                = "HUB-FW-MAIN-RULE"
+  name                = "hub-fw-main-rule"
   priority            = 400
   resource_group_name = module.virtual_machines["hub"].resource_group_name
 
@@ -46,7 +46,7 @@ resource "azurerm_firewall_network_rule_collection" "name" {
 }
 
 resource "azurerm_firewall" "fw" {
-  name                = "HUB-FW"
+  name                = "hub-firewall"
   location            = var.environments.hub.location
   resource_group_name = module.virtual_machines["hub"].resource_group_name
   sku_name            = "AZFW_VNet"
@@ -60,13 +60,13 @@ resource "azurerm_firewall" "fw" {
 }
 
 resource "azurerm_log_analytics_workspace" "fw_law" {
-  name                = "HUB-FW-LAW"
+  name                = "hub-firewall-law"
   resource_group_name = azurerm_firewall.fw.resource_group_name
   location            = azurerm_firewall.fw.location
 }
 
 resource "azurerm_monitor_diagnostic_setting" "fw_diag" {
-  name                           = "HUB-FW-DIAG-LOGS"
+  name                           = "hub-firewall-diag-setting"
   target_resource_id             = azurerm_firewall.fw.id
   log_analytics_workspace_id     = azurerm_log_analytics_workspace.fw_law.id
   log_analytics_destination_type = "AzureDiagnostics"

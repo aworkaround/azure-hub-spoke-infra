@@ -1,11 +1,11 @@
 resource "azurerm_route_table" "spoke1_rt" {
-  name                = "SPOKE1-RT"
+  name                = "spoke1-route-table"
   resource_group_name = module.virtual_machines["spoke1"].resource_group_name
   location            = var.environments.spoke1.location
 }
 
 resource "azurerm_route" "spoke1_route" {
-  name                   = "SPOKE1-Route"
+  name                   = "spoke1-route"
   resource_group_name    = module.virtual_machines["spoke1"].resource_group_name
   route_table_name       = azurerm_route_table.spoke1_rt.name
   address_prefix         = var.environments.spoke2.vnet_address_space[0]
@@ -14,13 +14,13 @@ resource "azurerm_route" "spoke1_route" {
 }
 
 resource "azurerm_route_table" "spoke2_rt" {
-  name                = "SPOKE2-RT"
+  name                = "spoke2-route-table"
   resource_group_name = module.virtual_machines["spoke2"].resource_group_name
   location            = var.environments.spoke2.location
 }
 
 resource "azurerm_route" "spoke2_route" {
-  name                   = "SPOKE2-Route"
+  name                   = "spoke2-route"
   resource_group_name    = module.virtual_machines["spoke2"].resource_group_name
   route_table_name       = azurerm_route_table.spoke2_rt.name
   address_prefix         = var.environments.spoke1.vnet_address_space[0]
